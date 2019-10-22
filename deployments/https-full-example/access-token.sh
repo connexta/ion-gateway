@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 printf "Retrieving access token from Keycloak for admin:admin... (waiting up to 30 seconds)"
-token_response=$(curl -X POST "http://keycloak:8080/auth/realms/master/protocol/openid-connect/token" -insecure \
+token_response=$(curl -X POST "http://keycloak:8443/auth/realms/master/protocol/openid-connect/token" -insecure -k \
 -H "Content-Type: application/x-www-form-urlencoded" \
 -d "username=admin" \
 -d "password=admin" \

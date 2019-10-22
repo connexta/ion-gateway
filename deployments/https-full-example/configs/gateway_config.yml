@@ -1,7 +1,22 @@
 kc:
-  base-url: http://keycloak:8080/auth
+  base-url: https://keycloak:8443/auth
   realm: master
   realm-url: ${kc.base-url}/realms/${kc.realm}
+
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: file:/certs/gateway.jks
+    key-store-password: changeit
+    key-alias: gateway
+    key-store-type: JKS
+    key-store-provider: SUN
+    trust-store: file:/trust/demoTruststore.jks
+    trust-store-password: changeit
+    trust-store-type: JKS
+  error:
+    include-stacktrace: always
 
 spring:
   spring:

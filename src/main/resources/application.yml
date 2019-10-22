@@ -1,65 +1,65 @@
 server:
-  port: 8080
+  port: 8443
   error:
     include-stacktrace: always
 
-logging:
-  level:
-    root: INFO
-    org.springframework.web: INFO
-    org.springframework.security: INFO
-    org.springframework.security.oauth2: INFO
-    org.springframework.cloud.gateway: TRACE
-#    org.springframework.boot.autoconfigure: DEBUG
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.web: INFO
+#    org.springframework.security: INFO
+#    org.springframework.security.oauth2: INFO
+#    org.springframework.cloud.gateway: TRACE
+##    org.springframework.boot.autoconfigure: DEBUG
 
-kc:
-  base-url: http://keycloak:8080/auth
-  realm: master
-  realm-url: ${kc.base-url}/realms/${kc.realm}
+#kc:
+#  base-url: http://keycloak:8080/auth
+#  realm: master
+#  realm-url: ${kc.base-url}/realms/${kc.realm}
 
-spring:
-  spring:
-    thymeleaf:
-      cache: false
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
-      client:
-        registration:
-          master:
-            provider: keycloak
-            client-id: login-client
-            client-secret: secret
-            authorization-grant-type: authorization_code
-            redirect-uri-template: "{baseUrl}/{action}/oauth2/code/{registrationId}"
-            scope: openid,profile,email,resource.read
-        provider:
-          keycloak:
-            authorization-uri: ${kc.realm-url}/protocol/openid-connect/auth
-            token-uri: ${kc.realm-url}/protocol/openid-connect/token
-            user-info-uri: ${kc.realm-url}/protocol/openid-connect/userinfo
-            user-name-attribute: preferred_username
-            jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
-  application:
-    name: ion-gateway
-  cloud:
-    gateway:
-      routes:
-        - id: minio
-          uri: http://minio:9000
-          predicates:
-            - Path=/minio/**
-        - id: keycloak
-          uri: http://keycloak:8080
-          predicates:
-            - Path=/keycloak/**
-        - id: store
-          uri: http://store:8080
-          predicates:
-            - Path=/store/**
-        - id: ingest
-          uri: http://ingest:8080
-          predicates:
-            - Path=/ingest/**
+#spring:
+#  spring:
+#    thymeleaf:
+#      cache: false
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+#      client:
+#        registration:
+#          master:
+#            provider: keycloak
+#            client-id: login-client
+#            client-secret: secret
+#            authorization-grant-type: authorization_code
+#            redirect-uri-template: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+#            scope: openid,profile,email,resource.read
+#        provider:
+#          keycloak:
+#            authorization-uri: ${kc.realm-url}/protocol/openid-connect/auth
+#            token-uri: ${kc.realm-url}/protocol/openid-connect/token
+#            user-info-uri: ${kc.realm-url}/protocol/openid-connect/userinfo
+#            user-name-attribute: preferred_username
+#            jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+#  application:
+#    name: ion-gateway
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: minio
+#          uri: http://minio:9000
+#          predicates:
+#            - Path=/minio/**
+#        - id: keycloak
+#          uri: http://keycloak:8080
+#          predicates:
+#            - Path=/keycloak/**
+#        - id: store
+#          uri: http://store:8080
+#          predicates:
+#            - Path=/store/**
+#        - id: ingest
+#          uri: http://ingest:8080
+#          predicates:
+#            - Path=/ingest/**
