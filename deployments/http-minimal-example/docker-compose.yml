@@ -1,0 +1,75 @@
+# Configurable Registries
+#    This compose file allows the composition to be used in multiple environments. Instead of
+#    using hard-coded strings to identify the names of images, variable interpolation is used
+#    to make the registry part of the name configurable at runtime.
+#
+#    If the REGISTRY environment variable is not set, the registry defaults to
+#    Docker Hub (docker.io).
+#
+#    If the REGISTRY variable is set, interpolation on the command line can be used to inject
+#    a registry's address when the Docker service is deployed. the format of the command is:
+#
+#        docker stack deploy -c <(REGISTRY=<registry-url> docker-compose config) cdr
+#
+#    where <registry-url> is changed to be the address of the target registry.
+# --------------------------------------------------------------------------------------------------
+# To deploy to a cloud:
+#    1. Build the images locally.
+#    2. Tag those images to include the target registry address.
+#    3. Push those images.
+#    4. From the cloud environment, execute:
+#
+#        docker stack deploy -c <(REGISTRY=<registry-url> docker-compose config) cdr
+#
+#
+version: '3.7'
+
+networks:
+  default:
+    driver: overlay
+
+configs:
+  keycloak_config:
+    file: ./configs/keycloakJsonConfig.json
+  gateway_config:
+    file: ./configs/gateway_config.yml
+
+services:
+  # Security Setup
+  gateway:
+    depends_on:
+      - keycloak
+    image: ${REGISTRY:-docker.io}/cnxta/ion-gateway:0.1.0-SNAPSHOT
+    networks:
+      - default
+    ports:
+      - "80:8080"
+      - "10050:10050"
+    configs:
+      - source: gateway_config
+        target: /configs/gateway_config.yml
+    command:
+      - "--spring.config.additional-location=file:/configs/gateway_config.yml"
+
+  keycloak:
+    environment:
+      DB_VENDOR: h2
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_USER: admin
+    image: jboss/keycloak:7.0.0
+    networks:
+      - default
+    ports:
+      - "8080:8080"
+    configs:
+      - source: keycloak_config
+        target: /keycloakJsonConfig.json
+    # passing these variables in under the "environment" label caused issues on some platforms
+    command: [
+      "-b",
+      "0.0.0.0",
+      "-Dkeycloak.migration.action=import",
+      "-Dkeycloak.migration.provider=singleFile",
+      "-Dkeycloak.migration.file=/keycloakJsonConfig.json",
+      "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
+    ]
