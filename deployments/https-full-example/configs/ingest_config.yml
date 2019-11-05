@@ -1,2 +1,2 @@
 endpointUrl:
-  store: http://store:8080/mis/product/
+  retrieve: http://localhost:9040/
