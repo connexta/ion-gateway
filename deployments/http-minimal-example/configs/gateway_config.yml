@@ -24,7 +24,7 @@ spring:
             client-id: login-client
             client-secret: secret
             authorization-grant-type: authorization_code
-            redirect-uri-template: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             scope: openid,profile,email,resource.read
         provider:
           keycloak:

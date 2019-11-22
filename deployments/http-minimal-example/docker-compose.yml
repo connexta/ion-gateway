@@ -36,20 +36,20 @@ configs:
 
 services:
   # Security Setup
-  gateway:
-    depends_on:
-      - keycloak
-    image: ${REGISTRY:-docker.io}/cnxta/ion-gateway:0.1.0-SNAPSHOT
-    networks:
-      - default
-    ports:
-      - "80:8080"
-      - "10050:10050"
-    configs:
-      - source: gateway_config
-        target: /configs/gateway_config.yml
-    command:
-      - "--spring.config.additional-location=file:/configs/gateway_config.yml"
+#  gateway:
+#    depends_on:
+#      - keycloak
+#    image: ${REGISTRY:-docker.io}/cnxta/ion-gateway:0.1.0-SNAPSHOT
+#    networks:
+#      - default
+#    ports:
+#      - "9000:8080"
+#      - "10050:10050"
+#    configs:
+#      - source: gateway_config
+#        target: /configs/gateway_config.yml
+#    command:
+#      - "--spring.config.additional-location=file:/configs/gateway_config.yml"
 
   keycloak:
     environment:

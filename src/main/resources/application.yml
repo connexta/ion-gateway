@@ -1,5 +1,5 @@
 server:
-  port: 8443
+  port: 9000
   error:
     include-stacktrace: always
 
@@ -12,54 +12,55 @@ server:
 #    org.springframework.cloud.gateway: TRACE
 ##    org.springframework.boot.autoconfigure: DEBUG
 
-#kc:
-#  base-url: http://keycloak:8080/auth
-#  realm: master
-#  realm-url: ${kc.base-url}/realms/${kc.realm}
+kc:
+  base-url: http://keycloak:8080/auth
+  realm: master
+  realm-url: ${kc.base-url}/realms/${kc.realm}
 
-#spring:
-#  spring:
-#    thymeleaf:
-#      cache: false
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
-#      client:
-#        registration:
-#          master:
-#            provider: keycloak
-#            client-id: login-client
-#            client-secret: secret
-#            authorization-grant-type: authorization_code
-#            redirect-uri-template: "{baseUrl}/{action}/oauth2/code/{registrationId}"
-#            scope: openid,profile,email,resource.read
-#        provider:
-#          keycloak:
-#            authorization-uri: ${kc.realm-url}/protocol/openid-connect/auth
-#            token-uri: ${kc.realm-url}/protocol/openid-connect/token
-#            user-info-uri: ${kc.realm-url}/protocol/openid-connect/userinfo
-#            user-name-attribute: preferred_username
-#            jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
-#  application:
-#    name: ion-gateway
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: minio
-#          uri: http://minio:9000
-#          predicates:
-#            - Path=/minio/**
-#        - id: keycloak
-#          uri: http://keycloak:8080
-#          predicates:
-#            - Path=/keycloak/**
-#        - id: store
-#          uri: http://store:8080
-#          predicates:
-#            - Path=/store/**
-#        - id: ingest
-#          uri: http://ingest:8080
-#          predicates:
-#            - Path=/ingest/**
+spring:
+  spring:
+    thymeleaf:
+      cache: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+      client:
+        registration:
+          master:
+            provider: keycloak
+            client-id: login-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            scope: openid,profile,email,resource.read
+        provider:
+          keycloak:
+            authorization-uri: ${kc.realm-url}/protocol/openid-connect/auth
+            token-uri: ${kc.realm-url}/protocol/openid-connect/token
+            user-info-uri: ${kc.realm-url}/protocol/openid-connect/userinfo
+            user-name-attribute: preferred_username
+            jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+  application:
+    name: ion-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: example
+          uri: http://example:8080
+          predicates:
+            - Path=/example/**
+          filters:
+            - TokenRelay= # passes along JWT to internal services
+
+web:
+  context:
+    policy:
+      - context: "/whoami"
+        rules:
+          - "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=guest"
+      - context: "/*"
+        rules:
+          - "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=admin"
+
