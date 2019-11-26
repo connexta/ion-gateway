@@ -57,10 +57,14 @@ spring:
 web:
   context:
     policy:
-      - context: "/whoami"
-        rules:
-          - "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=guest"
-      - context: "/*"
-        rules:
-          - "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=admin"
+      - pattern: "/whoami"
+        scope: "openid"
+      - pattern: "/ingest"
+        scope: "ion/ingest"
+      - pattern: "/search"
+        scope: "ion/search"
+      - pattern: "/transform"
+        scope: "ion/transform"
+      - pattern: "/store"
+        scope: "ion/store"
 

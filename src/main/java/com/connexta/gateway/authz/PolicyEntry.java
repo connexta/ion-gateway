@@ -6,25 +6,23 @@
  */
 package com.connexta.gateway.authz;
 
-import java.util.List;
-
 public class PolicyEntry {
-  private String context;
-  private List<String> rules;
+  private String pattern;
+  private String scope;
 
-  public String getContext() {
-    return context;
+  public String getPattern() {
+    return pattern;
   }
 
-  public void setContext(String context) {
-    this.context = context;
+  public void setPattern(String pattern) {
+    this.pattern = pattern;
   }
 
-  public List<String> getRules() {
-    return rules;
+  public String getScope() {
+    return scope;
   }
 
-  public void setRules(List<String> rules) {
-    this.rules = rules;
+  public void setScope(String scope) {
+    this.scope = scope;
   }
 }

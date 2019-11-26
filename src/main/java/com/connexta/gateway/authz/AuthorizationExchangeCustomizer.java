@@ -11,6 +11,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity.AuthorizeExchangeSpec;
 import org.springframework.stereotype.Component;
 
+/**
+ * Customizes the {@link AuthorizeExchangeSpec} with a set of authorization managers according to
+ * the web context policy.
+ */
 @Component
 public class AuthorizationExchangeCustomizer implements Customizer<AuthorizeExchangeSpec> {
 
@@ -25,8 +29,8 @@ public class AuthorizationExchangeCustomizer implements Customizer<AuthorizeExch
   public void customize(AuthorizeExchangeSpec authorizeExchangeSpec) {
     for (PolicyEntry entry : webContextPolicy.getPolicy()) {
       authorizeExchangeSpec
-          .pathMatchers(entry.getContext())
-          .access(AuthorizationManagerFactory.getAuthorizationManager(entry.getRules()));
+          .pathMatchers(entry.getPattern())
+          .access(new ScopeReactiveAuthorizationManager(entry.getScope()));
     }
   }
 }
