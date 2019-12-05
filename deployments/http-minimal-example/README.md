@@ -60,7 +60,7 @@ under `spring->cloud->gateway->routes`.
 
 For example, with the hosts configuration above and the default routes set, navigating to `http://ion:80/minio` will
 redirect the user to login with keycloak, and then subsequently redirect them back to the gateway, forwarding the
-request to the internal minio service. All requests sent to `/mino` will continue be forwarded to the minio server.
+request to the internal minio service. All requests sent to `/minio` will continue be forwarded to the minio server.
 
 ### Authorization methods
 #### Browser redirect

@@ -556,17 +556,17 @@
     {
       "id": "e41502e8-0438-40f7-89fd-0575ab349c9e",
       "clientId": "login-client",
-      "rootUrl": "http://ion/",
-      "adminUrl": "http://ion/",
+      "rootUrl": "https://ion/",
+      "adminUrl": "https://ion/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://ion/*"
+        "https://ion/*"
       ],
       "webOrigins": [
-        "http://ion/"
+        "https://ion/"
       ],
       "notBefore": 0,
       "bearerOnly": false,

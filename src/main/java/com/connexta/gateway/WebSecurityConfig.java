@@ -6,6 +6,7 @@
  */
 package com.connexta.gateway;
 
+import com.connexta.gateway.authz.AuthorizationExchangeCustomizer;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.health.HealthEndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.info.InfoEndpointAutoConfiguration;
@@ -43,13 +44,14 @@ class WebSecurityConfig {
   // and bearer token logins
 
   @Bean
-  SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+  SecurityWebFilterChain springSecurityFilterChain(
+      ServerHttpSecurity http, AuthorizationExchangeCustomizer authorizationExchangeCustomizer) {
 
     // Disable CSRF
     http.csrf().disable();
 
     // Allow authenticated requests to any context
-    http.authorizeExchange().anyExchange().authenticated();
+    http.authorizeExchange(authorizationExchangeCustomizer);
 
     // Handle system-to-system Bearer tokens
     http.oauth2ResourceServer().jwt();

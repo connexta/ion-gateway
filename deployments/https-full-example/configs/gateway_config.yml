@@ -1,0 +1,73 @@
+kc:
+  base-url: https://keycloak:8443/auth
+  realm: master
+  realm-url: ${kc.base-url}/realms/${kc.realm}
+
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: file:/certs/gateway.jks
+    key-store-password: changeit
+    key-alias: gateway
+    key-store-type: JKS
+    key-store-provider: SUN
+    trust-store: file:/trust/demoTruststore.jks
+    trust-store-password: changeit
+    trust-store-type: JKS
+  error:
+    include-stacktrace: always
+
+spring:
+  spring:
+    thymeleaf:
+      cache: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+      client:
+        registration:
+          master:
+            provider: keycloak
+            client-id: login-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri-template: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            scope: openid,profile,email,resource.read
+        provider:
+          keycloak:
+            authorization-uri: ${kc.realm-url}/protocol/openid-connect/auth
+            token-uri: ${kc.realm-url}/protocol/openid-connect/token
+            user-info-uri: ${kc.realm-url}/protocol/openid-connect/userinfo
+            user-name-attribute: preferred_username
+            jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+  application:
+    name: ion-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: minio
+          uri: http://minio:9000
+          predicates:
+            - Path=/minio/**
+          # do not relay token to minio, it doesnt use keycloak
+        - id: keycloak
+          uri: http://keycloak:8080
+          predicates:
+            - Path=/keycloak/**
+          filters:
+            - TokenRelay=
+        - id: store
+          uri: http://store:8080
+          predicates:
+            - Path=/store/**
+          filters:
+            - TokenRelay=
+        - id: ingest
+          uri: http://ingest:8080
+          predicates:
+            - Path=/ingest/**
+          filters:
+            - TokenRelay=

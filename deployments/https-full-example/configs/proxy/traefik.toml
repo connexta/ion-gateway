@@ -1,0 +1,28 @@
+insecureSkipVerify = true
+logLevel = "DEBUG"
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+    [entryPoints.dashboard]
+        address = ":8888"
+    [entryPoints.http]
+        address = ":80"
+        [entryPoints.http.redirect]
+            entryPoint = "https"
+    [entryPoints.https]
+        address = ":443"
+        [entryPoints.https.tls]
+            [entryPoints.https.tls.defaultCertificate]
+                certFile = "/certs/ion.crt"
+                keyFile = "/certs/ion.key"
+[api]
+    entryPoint = "dashboard"
+
+[docker]
+    swarmMode = true
+    exposedByDefault = false
+    [docker.tls]
+        ca = "/certs/demoCA.crt"
+        cert = "/certs/ion.crt"
+        key = "/certs/ion.key"
+
