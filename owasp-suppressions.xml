@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.2.xsd">
+  <suppress>
+    <notes>
+      This CVE only applies to Spring Framework 5.0.5. ion-gateway uses a later version.
+    </notes>
+    <cve>CVE-2018-1258</cve>
+  </suppress>
+</suppressions>

@@ -13,11 +13,13 @@ server:
 ##    org.springframework.boot.autoconfigure: DEBUG
 
 kc:
-  base-url: http://keycloak:8080/auth
+  base-uri: http://keycloak:8080/auth
   realm: master
-  realm-url: ${kc.base-url}/realms/${kc.realm}
+  issuer-uri: ${kc.base-uri}/realms/${kc.realm}
 
 spring:
+  application:
+    name: ion-gateway
   spring:
     thymeleaf:
       cache: false
@@ -25,30 +27,25 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+          jwk-set-uri: ${kc.issuer-uri}/protocol/openid-connect/certs
       client:
         registration:
-          master:
+          keycloak:
             provider: keycloak
-            client-id: login-client
-            client-secret: secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
-            scope: openid,profile,email,resource.read
+            clientId: login-client
+            clientSecret: secret
+            authorizationGrantType: authorization_code
+            redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            scope: openid
         provider:
           keycloak:
-            authorization-uri: ${kc.realm-url}/protocol/openid-connect/auth
-            token-uri: ${kc.realm-url}/protocol/openid-connect/token
-            user-info-uri: ${kc.realm-url}/protocol/openid-connect/userinfo
+            issuer-uri: ${kc.issuer-uri}
             user-name-attribute: preferred_username
-            jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
-  application:
-    name: ion-gateway
   cloud:
     gateway:
       routes:
         - id: example
-          uri: http://example:8080
+          uri: http://example.com
           predicates:
             - Path=/example/**
           filters:

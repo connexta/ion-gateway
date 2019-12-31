@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 9000
   error:
     include-stacktrace: always
 
@@ -7,6 +7,15 @@ kc:
   base-uri: http://keycloak:8080/auth
   realm: master
   issuer-uri: ${kc.base-uri}/realms/${kc.realm}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.cloud.gateway: TRACE
+#    org.springframework.boot.autoconfigure: DEBUG
 
 spring:
   application:
