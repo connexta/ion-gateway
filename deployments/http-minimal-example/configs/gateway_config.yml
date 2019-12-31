@@ -30,7 +30,10 @@ spring:
             scope: openid
         provider:
           keycloak:
-            issuer-uri: ${kc.issuer-uri}
+            authorization-uri: ${kc.issuer-uri}/protocol/openid-connect/auth
+            jwk-set-uri: ${kc.issuer-uri}/protocol/openid-connect/certs
+            token-uri: ${kc.issuer-uri}/protocol/openid-connect/token
+            user-info-uri: ${kc.issuer-uri}/protocol/openid-connect/userinfo
             user-name-attribute: preferred_username
   cloud:
     gateway:
