@@ -1,15 +1,5 @@
 server:
-  port: 8443
-  ssl:
-    enabled: true
-    key-store: file:/certs/gateway.jks
-    key-store-password: changeit
-    key-alias: gateway
-    key-store-type: JKS
-    key-store-provider: SUN
-    trust-store: file:/trust/demoTruststore.jks
-    trust-store-password: changeit
-    trust-store-type: JKS
+  port: 9000
   error:
     include-stacktrace: always
 
@@ -17,6 +7,15 @@ kc:
   base-uri: http://keycloak:8080/auth
   realm: master
   issuer-uri: ${kc.base-uri}/realms/${kc.realm}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.cloud.gateway: TRACE
+#    org.springframework.boot.autoconfigure: DEBUG
 
 spring:
   application:
@@ -48,26 +47,9 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: minio
-          uri: http://minio:9000
+        - id: example
+          uri: http://example.com
           predicates:
-            - Path=/minio/**
-          # do not relay token to minio, it doesnt use keycloak
-        - id: keycloak
-          uri: http://keycloak:8080
-          predicates:
-            - Path=/keycloak/**
+            - Path=/example/**
           filters:
-            - TokenRelay=
-        - id: store
-          uri: http://store:8080
-          predicates:
-            - Path=/store/**
-          filters:
-            - TokenRelay=
-        - id: ingest
-          uri: http://ingest:8080
-          predicates:
-            - Path=/ingest/**
-          filters:
-            - TokenRelay=
+            - TokenRelay= # passes along JWT to internal services

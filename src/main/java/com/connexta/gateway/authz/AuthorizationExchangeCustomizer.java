@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Customizes the {@link AuthorizeExchangeSpec} with a set of authorization managers according to
- * the web context policy.
+ * the web context policy. If provided {@link WebContextPolicy} is null, access control will be
+ * disabled. All requests from authenticated clients will be permitted.
  */
 @Component
 public class AuthorizationExchangeCustomizer implements Customizer<AuthorizeExchangeSpec> {
@@ -27,10 +28,17 @@ public class AuthorizationExchangeCustomizer implements Customizer<AuthorizeExch
 
   @Override
   public void customize(AuthorizeExchangeSpec authorizeExchangeSpec) {
-    for (PolicyEntry entry : webContextPolicy.getPolicy()) {
-      authorizeExchangeSpec
-          .pathMatchers(entry.getPattern())
-          .access(new ScopeReactiveAuthorizationManager(entry.getScope()));
+    if (webContextPolicy != null
+        && webContextPolicy.getPolicy() != null
+        && !webContextPolicy.getPolicy().isEmpty()) {
+      for (PolicyEntry entry : webContextPolicy.getPolicy()) {
+        authorizeExchangeSpec
+            .pathMatchers(entry.getPattern())
+            .access(new ScopeReactiveAuthorizationManager(entry.getScope()));
+      }
     }
+
+    // Fallback if no path matchers apply
+    authorizeExchangeSpec.anyExchange().authenticated();
   }
 }

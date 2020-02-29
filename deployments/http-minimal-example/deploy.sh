@@ -59,8 +59,7 @@ function deploy_images () {
 function print_warning () {
     printf "\
 ====== WARNING: TEST DEPLOYMENT ======\n\
-This docker deployment will create a local minio server with default secret and key, and a local Keycloak with\
-default users. Make sure this isn't being deployed into production.\n\n"
+This docker deployment will create a local Keycloak with default users. Make sure this isn't being deployed into production.\n\n"
 }
 
 function print_finish () {

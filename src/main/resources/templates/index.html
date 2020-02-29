@@ -16,8 +16,8 @@
 </div>
 <h1>OAuth 2.0 Login with Spring Security</h1>
 <div>
-    You are successfully logged in <span style="font-weight:bold" th:text="${userName}"></span>
-    via the OAuth 2.0 Client <span style="font-weight:bold" th:text="${clientName}"></span>
+    You are successfully logged in as <span style="font-weight:bold" th:text="${userName}"></span>
+    via OAuth 2.0 Client Registration <span style="font-weight:bold" th:text="${clientRegistrationId}"></span>
 </div>
 <div>&nbsp;</div>
 <div>
@@ -25,6 +25,14 @@
     <ul>
         <li th:each="userAttribute : ${userAttributes}">
             <span style="font-weight:bold" th:text="${userAttribute.key}"></span>: <span th:text="${userAttribute.value}"></span>
+        </li>
+    </ul>
+</div>
+<div>
+    <span style="font-weight:bold">Granted Authorities:</span>
+    <ul>
+        <li th:each="authority : ${grantedAuthorities}">
+            <span style="font-weight:bold" th:text="${authority}"></span>
         </li>
     </ul>
 </div>
